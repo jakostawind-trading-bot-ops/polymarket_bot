@@ -1,19 +1,12 @@
 import asyncio
 
-from dishka import make_async_container
-
 from bot.bootstrap import BootstrapSettings, parse_cli_args
-from bot.di.providers.bootstrap_provider import BootstrapSettingsProvider
-from bot.di.providers.nats_provider import NatsProvider
 from bot.nats.publisher import NatsPublisher
+from bot.di.container import create_container
 
 
-async def run(settings: BootstrapSettings) -> None:
-    async with make_async_container(
-        BootstrapSettingsProvider(),
-        NatsProvider(),
-        context={BootstrapSettings: settings},
-    ) as container:
+async def run(bootstrap_settings: BootstrapSettings) -> None:
+    async with create_container(bootstrap_settings) as container:
         publisher = await container.get(NatsPublisher)
 
         await publisher.publish(
