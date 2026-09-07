@@ -1,13 +1,17 @@
 import asyncio
+from dishka import make_async_container
 
-from bot.broker.nats.client import NatsClient
-from bot.broker.nats.publisher import NatsPublisher
+from bot.di.nats_provider import NatsProvider
+from bot.nats.publisher import NatsPublisher
 
 async def main():
-    nats_client = await NatsClient.create_nats_client(url="nats://localhost:4222")
-    nats_publisher = NatsPublisher(nats_client)
-    
-    await nats_publisher.publish("bot_test", {"bot_it": "1234565789ABC"})
+    async with make_async_container(NatsProvider()) as container:
+        publisher = await container.get(NatsPublisher)
+        
+        await publisher.publish(
+            subject="test_bot",
+            message={"bot_id": "abc123"}
+        )
     
 
 
