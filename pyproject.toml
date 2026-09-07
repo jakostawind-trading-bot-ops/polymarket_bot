@@ -5,9 +5,18 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "dishka>=1.10.1",
     "nats-py>=2.15.0",
 ]
 
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13"]
+build-backend = "uv_build"
+
 [tool.uv.build-backend]
-module-name = "src"
+module-name = "bot"
 namespace = true

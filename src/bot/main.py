@@ -1,7 +1,7 @@
 import asyncio
 
-from src.broker.nats.client import NatsClient
-from src.broker.nats.publisher import NatsPublisher
+from bot.broker.nats.client import NatsClient
+from bot.broker.nats.publisher import NatsPublisher
 
 async def main():
     nats_client = await NatsClient.create_nats_client(url="nats://localhost:4222")
