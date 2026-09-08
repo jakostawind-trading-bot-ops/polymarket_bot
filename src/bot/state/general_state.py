@@ -13,6 +13,6 @@ def generate_bet_id():
     )
 
 @dataclass
-class State():
+class GeneralState():
     bot_id: str
     bot_status: LifecycleStatuses

@@ -1,23 +1,18 @@
-import secrets
-
-from bot.nats.publisher import NatsPublisher
-from bot.state import State
-from bot.lifecycle.bot_lifecycle.bot_lifecycle import BotLifecycle, LifecycleStatuses
+from bot.lifecycle.bot_lifecycle.bot_lifecycle import BotLifecycle
+from bot.events.lifecycle_ev import BotStartedEvent
+from bot.ports.event_publisher import EventPublisher
+from bot.state.general_state import GeneralState
 
 class StartBotUC():
     def __init__(self,
-                 state: State,
+                 state: GeneralState,
                  bot_lifecycle: BotLifecycle,
-                 publisher: NatsPublisher):
+                 publisher: EventPublisher):
         self.state = state
-        self.bot_lifecycle = BotLifecycle
+        self.bot_lifecycle = bot_lifecycle
         self.publisher = publisher
         
     async def execute(self):        
-        await self.publisher.publish(
-            subject="bot_test",
-            message={
-                "bot_id": self.state.bot_id,
-                "bot_status": self.state.bot_status
-            }
-        )
+        await self.publisher.publish(BotStartedEvent(payload={
+            "msg": "Bot started"
+        }))

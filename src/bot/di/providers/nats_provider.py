@@ -5,6 +5,7 @@ from nats.aio.client import Client
 
 from bot.nats.publisher import NatsPublisher
 from bot.bootstrap import BootstrapSettings
+from bot.ports.event_publisher import EventPublisher
 
 class NatsProvider(Provider):
     scope = Scope.APP
@@ -20,4 +21,7 @@ class NatsProvider(Provider):
         finally:
             await nc.close()
         
-    nats_publisher = provide(NatsPublisher)
+    nats_publisher = provide(
+        NatsPublisher,
+        provides=EventPublisher,
+    )

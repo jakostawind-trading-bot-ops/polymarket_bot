@@ -1,11 +1,11 @@
-from bot.state import State
+from bot.state.general_state import GeneralState
 
 from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatuses 
 
 class BotLifecycle():
     def __init__(self,
-                 state: State):
-        self.state = state
+                 general_state: GeneralState):
+        self.state = general_state
         
     def ensure_status(self, *allowed: LifecycleStatuses):
         if self.state.bot_status not in allowed:
