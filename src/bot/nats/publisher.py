@@ -18,12 +18,13 @@ class NatsPublisher():
         message = {
                 "bot_id": self.general_state.bot_id,
                 "bot_status": self.general_state.bot_status,
-                "payload": event.payload,
                 "event": {
                     "event_type": event.event_type,
                     "event_name": event.event_name,
+                },
+                "payload": event.payload,
+                "msg": event.msg,
                 "timestamp": event.timestamp,
-                }
             }
         await self.nats_client.publish(
             subject=subject,
