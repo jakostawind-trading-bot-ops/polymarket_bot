@@ -2,7 +2,7 @@ import asyncio
 
 from bot.bootstrap import parse_cli_args
 from bot.di.container import create_container
-from bot.lifecycle.process_lifecycle.process_lifecycle import ProcessLifecycle
+from bot.process_lifecycle import ProcessLifecycle
 from bot.use_cases.lifecycle_uc import StartBotUC
 
 

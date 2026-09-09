@@ -1,6 +1,6 @@
 from dishka import provide, Provider, Scope
 
-from bot.lifecycle.bot_lifecycle.bot_lifecycle import BotLifecycle
+from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
 from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatuses
 from bot.state.general_state import GeneralState, generate_bet_id
 
@@ -14,4 +14,4 @@ class LifecycleProvider(Provider):
             bot_status=LifecycleStatuses.STARTED
         )
     
-    bot_lifecycle = provide(BotLifecycle)
+    bot_lifecycle = provide(Lifecycle)

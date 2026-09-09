@@ -3,7 +3,7 @@
 - [ ] смена статуса на RUNNING
 
 # Bot Lifecycle
-- [x] добавить BotLifecycle в DI
+- [x] добавить Lifecycle в DI
 
 # Use Cases
 - [x] сделать первый юз кейс start_bot()

@@ -2,7 +2,7 @@ from bot.state.general_state import GeneralState
 
 from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatuses 
 
-class BotLifecycle():
+class Lifecycle():
     def __init__(self,
                  general_state: GeneralState):
         self.state = general_state
