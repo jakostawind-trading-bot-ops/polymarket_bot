@@ -6,3 +6,8 @@ from bot.events.event import Event
 class BotStartedEvent(Event):
     event_type = "lifecycle"
     event_name = "BotStartedEvent"
+    
+@dataclass
+class BotRunnedEvent(Event):
+    event_type = "lifecycle"
+    event_name = "BotRunnedEvent"

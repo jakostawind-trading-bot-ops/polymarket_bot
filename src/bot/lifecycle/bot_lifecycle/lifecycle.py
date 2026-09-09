@@ -5,7 +5,7 @@ from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatuses
 class Lifecycle():
     def __init__(self,
                  general_state: GeneralState):
-        self.state = general_state
+        self.general_state = general_state
         
     def ensure_status(self, *allowed: LifecycleStatuses):
         if self.state.bot_status not in allowed:
@@ -17,7 +17,5 @@ class Lifecycle():
         await self.ensure_status(allowed_statuses)
         self.state.bot_status = new_status
         
-    
-        
-        
-        
+    async def run(self):
+        self.general_state = LifecycleStatuses.RUNNING
