@@ -27,16 +27,17 @@ class CommandDecoder:
 
             self._factories[route.message_type] = route.factory
 
-    def decode(self, raw_message: bytes) -> Command:
+    def decode(self, 
+               command_type: str,
+               raw_message: bytes) -> Command:
           try:
               message = json.loads(raw_message)
           except (UnicodeDecodeError, json.JSONDecodeError) as error:
               raise RuntimeError("Invalid JSON") from error
 
-          command_type = message.get("type")
 
-          if not isinstance(command_type, str):
-              raise RuntimeError("Missing command type")
+          if not isinstance(message, dict):
+              raise RuntimeError("Message must be a JSON object")
 
           factory = self._factories.get(command_type)
 

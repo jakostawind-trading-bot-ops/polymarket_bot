@@ -1,5 +1,6 @@
 import asyncio
 
+from bot.logging_config import configure_logging
 from bot.bootstrap import parse_cli_args
 from bot.di.container import create_container
 from bot.process_lifecycle import ProcessLifecycle
@@ -21,4 +22,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    configure_logging()
     asyncio.run(main())

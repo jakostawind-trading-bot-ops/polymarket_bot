@@ -55,7 +55,9 @@ class NatsProvider(Provider):
     ) -> AsyncIterator[CommandSubscriber]:
         subscriber = NatsSubscriber(
             jetstream=jetstream,
-            subject=f"bot.{general_state.bot_id}.command.*",
+            subject_prefix=(
+                f"bot.{general_state.bot_id}.command."
+            ),
             decoder=decoder,
             dispatcher=dispatcher,
         )
@@ -66,13 +68,6 @@ class NatsProvider(Provider):
             yield subscriber
         finally:
             await subscriber.close()
-
-        
-    @provide
-    def provide_command_decoder(self) -> CommandDecoder:
-            return CommandDecoder(
-                routes=LIFECYCLE_ROUTES,
-            )
             
 
 

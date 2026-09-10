@@ -1,8 +1,11 @@
+import logging
+
 from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
 from bot.events.lifecycle_ev import BotStartedEvent, BotRunnedEvent
 
+logger = logging.getLogger(__name__)
 
 class StartBotUC():
     def __init__(self,
@@ -13,7 +16,8 @@ class StartBotUC():
         self.lifecycle = lifecycle
         self.publisher = publisher
         
-    async def execute(self):        
+    async def execute(self):
+        logger.info("Bot started")   
         await self.publisher.publish_event(BotStartedEvent(
             payload=[],
             msg="Bot started"

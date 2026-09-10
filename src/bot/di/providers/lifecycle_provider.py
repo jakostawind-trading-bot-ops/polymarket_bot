@@ -10,7 +10,8 @@ class LifecycleProvider(Provider):
     @provide
     def provide_state(self) -> GeneralState:
         return GeneralState(
-            bot_id=generate_bet_id(),
+            # bot_id=generate_bet_id(),
+            bot_id="test_bot", # временно чтобы каждый раз не переключать в натсе
             bot_status=LifecycleStatuses.STARTED
         )
     
