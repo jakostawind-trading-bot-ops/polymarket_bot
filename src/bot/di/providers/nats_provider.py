@@ -14,6 +14,8 @@ from bot.ports.command_subscriber import CommandSubscriber
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
 
+COMMAND_STREAM_NAME = "BOT_COMMANDS"
+EVENT_STREAM_NAME = "BOT_EVENTS"
 
 class NatsProvider(Provider):
     scope = Scope.APP
@@ -38,11 +40,18 @@ class NatsProvider(Provider):
         nats_client: Client,
     ) -> JetStreamContext:
         return nats_client.jetstream()
-
-    nats_publisher = provide(
-        NatsPublisher,
-        provides=EventPublisher,
-    )
+    
+    @provide
+    def provide_nats_publisher(
+        self,
+        jetstream: JetStreamContext,
+        general_state: GeneralState
+    ) -> EventPublisher:
+        return NatsPublisher(
+            jetstream = jetstream,
+            stream_name = EVENT_STREAM_NAME,
+            general_state=general_state
+        )
 
     @provide
     async def provide_nats_subscriber(
@@ -54,8 +63,12 @@ class NatsProvider(Provider):
     ) -> AsyncIterator[CommandSubscriber]:
         subscriber = NatsSubscriber(
             jetstream=jetstream,
+            stream_name=COMMAND_STREAM_NAME,
             subject_prefix=(
                 f"bot.{general_state.bot_id}.command."
+            ),
+            consumer_name=(
+                f"{general_state.bot_id}_commands"
             ),
             decoder=decoder,
             dispatcher=dispatcher,

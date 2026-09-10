@@ -1,16 +1,22 @@
+from nats.js.client import JetStreamContext
+
 from bot.commands.dispatcher import CommandDispatcher
 from bot.nats.decoder import CommandDecoder
 
 class NatsSubscriber:
     def __init__(
         self,
-        jetstream,
+        jetstream: JetStreamContext,
+        stream_name: str,
         subject_prefix: str,
+        consumer_name: str,
         decoder: CommandDecoder,
         dispatcher: CommandDispatcher,
     ) -> None:
         self._jetstream = jetstream
+        self._stream_name = stream_name
         self._subject_prefix = subject_prefix
+        self._consumer_name = consumer_name
         self._decoder = decoder
         self._dispatcher = dispatcher
         self._subscription = None
@@ -18,6 +24,7 @@ class NatsSubscriber:
     async def start(self) -> None:
         self._subscription = await self._jetstream.subscribe(
             subject=f"{self._subject_prefix}>",
+            durable = self._consumer_name,
             cb=self._handle_message,
             manual_ack=True,
         )
