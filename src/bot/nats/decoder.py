@@ -1,49 +1,92 @@
-from collections.abc import Callable, Iterable
-from dataclasses import dataclass
-from typing import Any
 import json
 
+from collections.abc import Iterable
+from dataclasses import dataclass
+from pydantic import BaseModel, ValidationError
+
 from bot.commands.command import Command
-
-
-CommandFactory = Callable[[dict[str, Any]], Command]
 
 
 @dataclass(frozen=True, slots=True)
 class CommandRoute:
     message_type: str
-    factory: CommandFactory
+    command_type: type[Command]
+    payload_schema: type[BaseModel] | None = None
 
 
 class CommandDecoder:
-    def __init__(self, routes: Iterable[CommandRoute]) -> None:
-        self._factories: dict[str, CommandFactory] = {}
+    def __init__(
+        self,
+        routes: Iterable[CommandRoute],
+    ) -> None:
+        self._routes: dict[str, CommandRoute] = {}
 
         for route in routes:
-            if route.message_type in self._factories:
-                raise ValueError(
-                    f"Duplicate command type: {route.message_type}"
+            if route.message_type in self._routes:
+                raise RuntimeError(
+                    f"Duplicate command route: {route.message_type}"
                 )
 
-            self._factories[route.message_type] = route.factory
+            self._routes[route.message_type] = route
 
-    def decode(self, 
-               command_type: str,
-               raw_message: bytes) -> Command:
-          try:
-              message = json.loads(raw_message)
-          except (UnicodeDecodeError, json.JSONDecodeError) as error:
-              raise RuntimeError("Invalid JSON") from error
+    def decode(
+        self,
+        message_type: str,
+        raw_message: bytes,
+    ) -> Command:
+        try:
+            message = json.loads(raw_message)
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise RuntimeError("Invalid JSON") from error
 
+        if not isinstance(message, dict):
+            raise RuntimeError("Message must be a JSON object")
 
-          if not isinstance(message, dict):
-              raise RuntimeError("Message must be a JSON object")
+        route = self._routes.get(message_type)
 
-          factory = self._factories.get(command_type)
+        if route is None:
+            raise RuntimeError(
+                f"Unsupported command type: {message_type}"
+            )
 
-          if factory is None:
-              raise RuntimeError(
-                  f"Unsupported command type: {command_type}"
-              )
+        trace_id = message.get("trace_id")
 
-          return factory(message)
+        if not isinstance(trace_id, str) or not trace_id:
+            raise RuntimeError("Missing or invalid trace_id")
+
+        payload = message.get("payload", {})
+
+        if not isinstance(payload, dict):
+            raise RuntimeError("Payload must be a JSON object")
+
+        if "trace_id" in payload:
+            raise RuntimeError("Payload must not contain trace_id")
+
+        if route.payload_schema is None:
+            if payload:
+                raise RuntimeError(
+                    f"Command {message_type} does not accept payload"
+                )
+
+            command_payload = {}
+        else:
+            try:
+                validated_payload = (
+                    route.payload_schema.model_validate(payload)
+                )
+            except ValidationError as error:
+                raise RuntimeError(
+                    f"Invalid payload for command {message_type}"
+                ) from error
+
+            command_payload = validated_payload.model_dump()
+
+        try:
+            return route.command_type(
+                trace_id=trace_id,
+                **command_payload,
+            )
+        except TypeError as error:
+            raise RuntimeError(
+                f"Payload schema does not match command {message_type}"
+            ) from error

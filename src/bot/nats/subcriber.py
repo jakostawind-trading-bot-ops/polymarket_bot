@@ -29,12 +29,12 @@ class NatsSubscriber:
 
     async def _handle_message(self, message) -> None:
         try:
-            command_type = self._extract_command_type(
+            message_type = self._extract_message_type(
                 message.subject,
             )
 
             command = self._decoder.decode(
-                command_type=command_type,
+                message_type=message_type,
                 raw_message=message.data,
             )
 
@@ -50,17 +50,17 @@ class NatsSubscriber:
 
         await message.ack()
 
-    def _extract_command_type(self, subject: str) -> str:
+    def _extract_message_type(self, subject: str) -> str:
         if not subject.startswith(self._subject_prefix):
             raise RuntimeError(
                 f"Unexpected subject: {subject}"
             )
 
-        command_type = subject.removeprefix(
+        message_type = subject.removeprefix(
             self._subject_prefix,
         )
 
-        if not command_type:
+        if not message_type:
             raise RuntimeError("Missing command type")
 
-        return command_type
+        return message_type

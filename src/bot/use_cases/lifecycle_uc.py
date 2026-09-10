@@ -11,10 +11,10 @@ class StartBotUC():
     def __init__(self,
                  general_state: GeneralState,
                  lifecycle: Lifecycle,
-                 publisher: EventPublisher):
+                 publisher_port: EventPublisher):
         self.general_state = general_state
         self.lifecycle = lifecycle
-        self.publisher = publisher
+        self.publisher = publisher_port
         
     async def execute(self):
         logger.info("Bot started")   
@@ -27,10 +27,10 @@ class RunBotUC():
     def __init__(self,
                  general_state: GeneralState,
                  lifecycle: Lifecycle,
-                 publisher: EventPublisher):
+                 publisher_port: EventPublisher):
         self.general_state = general_state
         self.lifecycle = lifecycle
-        self.publisher = publisher
+        self.publisher = publisher_port
         
     async def execute(self):
         prev_status = self.general_state.bot_status

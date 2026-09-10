@@ -10,7 +10,6 @@ from bot.commands.dispatcher import CommandDispatcher
 from bot.nats.decoder import CommandDecoder
 from bot.nats.publisher import NatsPublisher
 from bot.nats.subcriber import NatsSubscriber
-from bot.nats.routes.lifecycle import LIFECYCLE_ROUTES
 from bot.ports.command_subscriber import CommandSubscriber
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
@@ -69,5 +68,4 @@ class NatsProvider(Provider):
         finally:
             await subscriber.close()
             
-
 

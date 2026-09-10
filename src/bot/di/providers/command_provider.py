@@ -1,9 +1,9 @@
 from dishka import provide, Provider, Scope
 
-from bot.nats.decoder import CommandDecoder
 from bot.commands.dispatcher import CommandDispatcher
-from bot.nats.routes.lifecycle import LIFECYCLE_ROUTES
-from bot.commands.lifecycle_cmd import RunBotCommand, RunBotHandler
+from bot.commands.lifecycle.run_bot import RunBotCommand, RunBotHandler
+from bot.nats.decoder import CommandDecoder
+from bot.nats.routes.registry import COMMAND_ROUTES
 
 class CommandProvider(Provider):
     scope = Scope.APP
@@ -13,7 +13,7 @@ class CommandProvider(Provider):
     @provide
     def provide_decoder(self) -> CommandDecoder:
         return CommandDecoder(
-            routes=LIFECYCLE_ROUTES,
+            routes=COMMAND_ROUTES,
         )
 
     @provide
