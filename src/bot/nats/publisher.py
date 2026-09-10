@@ -22,6 +22,7 @@ class NatsPublisher():
             "bot_id": self._general_state.bot_id,
             "bot_status": self._general_state.bot_status,
             "event": {
+                "trace_id": str(event.trace_id),
                 "event_type": event.event_type,
                 "event_name": event.event_name,
             },

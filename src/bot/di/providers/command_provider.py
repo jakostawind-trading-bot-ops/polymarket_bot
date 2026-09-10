@@ -1,7 +1,7 @@
 from dishka import provide, Provider, Scope
 
 from bot.commands.dispatcher import CommandDispatcher
-from bot.commands.lifecycle.run_bot_cmd import RunBotCommand, RunBotHandler
+from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand, RunBotHandler
 from bot.nats.decoder import CommandDecoder
 from bot.nats.routes.registry import COMMAND_ROUTES
 
