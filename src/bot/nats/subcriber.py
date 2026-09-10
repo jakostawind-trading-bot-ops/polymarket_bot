@@ -1,7 +1,14 @@
+import logging
+
+from nats.aio.msg import Msg
 from nats.js.client import JetStreamContext
 
 from bot.commands.dispatcher import CommandDispatcher
-from bot.nats.decoder import CommandDecoder
+from bot.nats.decoder import CommandDecodeError, CommandDecoder
+
+
+logger = logging.getLogger(__name__)
+
 
 class NatsSubscriber:
     def __init__(
@@ -34,7 +41,7 @@ class NatsSubscriber:
             await self._subscription.unsubscribe()
             self._subscription = None
 
-    async def _handle_message(self, message) -> None:
+    async def _handle_message(self, message: Msg) -> None:
         try:
             message_type = self._extract_message_type(
                 message.subject,
@@ -44,14 +51,29 @@ class NatsSubscriber:
                 message_type=message_type,
                 raw_message=message.data,
             )
-
-            await self._dispatcher.dispatch(command)
-        except RuntimeError as error:
-            print(f"Invalid command: {error}")
+        except CommandDecodeError as error:
+            logger.warning(
+                "Invalid command on subject %s: %s",
+                message.subject,
+                error,
+            )
             await message.ack()
             return
-        except Exception as error:
-            print(f"Command processing failed: {error!r}")
+        except Exception:
+            logger.exception(
+                "Command decoding failed on subject %s",
+                message.subject,
+            )
+            await message.nak()
+            return
+
+        try:
+            await self._dispatcher.dispatch(command)
+        except Exception:
+            logger.exception(
+                "Command processing failed on subject %s",
+                message.subject,
+            )
             await message.nak()
             return
 
@@ -59,7 +81,7 @@ class NatsSubscriber:
 
     def _extract_message_type(self, subject: str) -> str:
         if not subject.startswith(self._subject_prefix):
-            raise RuntimeError(
+            raise CommandDecodeError(
                 f"Unexpected subject: {subject}"
             )
 
@@ -68,6 +90,6 @@ class NatsSubscriber:
         )
 
         if not message_type:
-            raise RuntimeError("Missing command type")
+            raise CommandDecodeError("Missing command type")
 
         return message_type

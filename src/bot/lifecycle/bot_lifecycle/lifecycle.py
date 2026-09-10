@@ -9,13 +9,21 @@ class Lifecycle():
         
     def ensure_status(self, *allowed: LifecycleStatuses):
         if self.general_state.bot_status not in allowed:
-            raise RuntimeError("Invalid bot_status")
+            allowed_values = ", ".join(status.value for status in allowed)
+            raise RuntimeError(
+                f"Cannot change status from "
+                f"{self.general_state.bot_status.value}; "
+                f"allowed statuses: {allowed_values}"
+            )
         
-    async def change_status(self,
+    def change_status(self,
                             *allowed_statuses: LifecycleStatuses,
                             new_status: LifecycleStatuses):
-        await self.ensure_status(allowed_statuses)
+        self.ensure_status(*allowed_statuses)
         self.general_state.bot_status = new_status
         
-    async def run(self):
-        self.general_state = LifecycleStatuses.RUNNING
+    def run(self):
+        self.change_status(
+            LifecycleStatuses.STARTED,
+            new_status=LifecycleStatuses.RUNNING
+        )

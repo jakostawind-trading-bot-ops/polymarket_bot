@@ -19,7 +19,7 @@ class StartBotUC():
     async def execute(self):
         logger.info("Bot started")   
         await self.publisher.publish_event(BotStartedEvent(
-            payload=[],
+            payload={},
             msg="Bot started"
         ))
         

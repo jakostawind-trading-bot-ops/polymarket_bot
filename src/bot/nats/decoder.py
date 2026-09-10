@@ -7,6 +7,10 @@ from pydantic import BaseModel, ValidationError
 from bot.commands.command import Command
 
 
+class CommandDecodeError(ValueError):
+    """Полученная команда не соответствует контракту."""
+
+
 @dataclass(frozen=True, slots=True)
 class CommandRoute:
     message_type: str
@@ -37,34 +41,38 @@ class CommandDecoder:
         try:
             message = json.loads(raw_message)
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
-            raise RuntimeError("Invalid JSON") from error
+            raise CommandDecodeError("Invalid JSON") from error
 
         if not isinstance(message, dict):
-            raise RuntimeError("Message must be a JSON object")
+            raise CommandDecodeError("Message must be a JSON object")
 
         route = self._routes.get(message_type)
 
         if route is None:
-            raise RuntimeError(
+            raise CommandDecodeError(
                 f"Unsupported command type: {message_type}"
             )
 
         trace_id = message.get("trace_id")
 
         if not isinstance(trace_id, str) or not trace_id:
-            raise RuntimeError("Missing or invalid trace_id")
+            raise CommandDecodeError("Missing or invalid trace_id")
 
         payload = message.get("payload", {})
 
         if not isinstance(payload, dict):
-            raise RuntimeError("Payload must be a JSON object")
+            raise CommandDecodeError(
+                "Payload must be a JSON object"
+            )
 
         if "trace_id" in payload:
-            raise RuntimeError("Payload must not contain trace_id")
+            raise CommandDecodeError(
+                "Payload must not contain trace_id"
+            )
 
         if route.payload_schema is None:
             if payload:
-                raise RuntimeError(
+                raise CommandDecodeError(
                     f"Command {message_type} does not accept payload"
                 )
 
@@ -75,7 +83,7 @@ class CommandDecoder:
                     route.payload_schema.model_validate(payload)
                 )
             except ValidationError as error:
-                raise RuntimeError(
+                raise CommandDecodeError(
                     f"Invalid payload for command {message_type}"
                 ) from error
 
