@@ -22,8 +22,8 @@ wheels = [
 
 [[package]]
 name = "nats-contracts"
-version = "0.2.0"
-source = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=6e8b28be18fccba769bf18e22ce5613e01e903b9#6e8b28be18fccba769bf18e22ce5613e01e903b9" }
+version = "0.3.3"
+source = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=4095d481ece45f4618b73d2c2d690a6d1ed95489#4095d481ece45f4618b73d2c2d690a6d1ed95489" }
 dependencies = [
     { name = "pydantic" },
 ]
@@ -51,7 +51,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "dishka", specifier = ">=1.10.1" },
-    { name = "nats-contracts", git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=6e8b28be18fccba769bf18e22ce5613e01e903b9" },
+    { name = "nats-contracts", git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=4095d481ece45f4618b73d2c2d690a6d1ed95489" },
     { name = "nats-py", specifier = ">=2.15.0" },
     { name = "pydantic", specifier = ">=2.13.5" },
 ]

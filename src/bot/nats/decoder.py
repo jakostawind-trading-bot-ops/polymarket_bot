@@ -1,8 +1,9 @@
 import json
-
 from collections.abc import Iterable
 from dataclasses import dataclass
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
+
+from nats_contracts.control.bot.v1.common import ControlMessage
 
 from bot.commands.command import Command
 
@@ -13,9 +14,9 @@ class CommandDecodeError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class CommandRoute:
-    message_type: str
-    command_type: type[Command]
-    payload_schema: type[BaseModel] | None = None
+    msg_type: str # суффикс NATS сабджект для поиска команды. Например "lifecycle.RunBotCommand"
+    msg_model: type[ControlMessage] # класс модели из nats_contracts
+    command_model: type[Command] # внутренняя команда бота
 
 
 class CommandDecoder:
@@ -26,75 +27,41 @@ class CommandDecoder:
         self._routes: dict[str, CommandRoute] = {}
 
         for route in routes:
-            if route.message_type in self._routes:
+            if route.msg_type in self._routes:
                 raise RuntimeError(
-                    f"Duplicate command route: {route.message_type}"
+                    f"Duplicate command route: {route.msg_type}"
                 )
 
-            self._routes[route.message_type] = route
+            self._routes[route.msg_type] = route
 
     def decode(
         self,
-        message_type: str,
+        msg_type: str,
         raw_message: bytes,
     ) -> Command:
-        try:
-            message = json.loads(raw_message)
-        except (UnicodeDecodeError, json.JSONDecodeError) as error:
-            raise CommandDecodeError("Invalid JSON") from error
 
-        if not isinstance(message, dict):
-            raise CommandDecodeError("Message must be a JSON object")
-
-        route = self._routes.get(message_type)
+        route = self._routes.get(msg_type)
 
         if route is None:
             raise CommandDecodeError(
-                f"Unsupported command type: {message_type}"
+                f"Unsupported command type: {msg_type}"
             )
-
-        trace_id = message.get("command", {}).get("trace_id")
-
-        if not isinstance(trace_id, str) or not trace_id:
-            raise CommandDecodeError("Missing or invalid trace_id")
-
-        payload = message.get("payload", {})
-
-        if not isinstance(payload, dict):
-            raise CommandDecodeError(
-                "Payload must be a JSON object"
-            )
-
-        if "trace_id" in payload:
-            raise CommandDecodeError(
-                "Payload must not contain trace_id"
-            )
-
-        if route.payload_schema is None:
-            if payload:
-                raise CommandDecodeError(
-                    f"Command {message_type} does not accept payload"
-                )
-
-            command_payload = {}
-        else:
-            try:
-                validated_payload = (
-                    route.payload_schema.model_validate(payload)
-                )
-            except ValidationError as error:
-                raise CommandDecodeError(
-                    f"Invalid payload for command {message_type}"
-                ) from error
-
-            command_payload = validated_payload.model_dump()
 
         try:
-            return route.command_type(
-                trace_id=trace_id,
-                **command_payload,
+            message = route.msg_model.model_validate_json(
+                raw_message
+            )
+        except ValidationError as error:
+            raise CommandDecodeError(
+                f"Invalid mmessage contract: {msg_type}"
+            ) from error
+            
+        try:
+            return route.command_model(
+                trace_id=message.message.trace_id,
+                **message.payload.model_dump(),
             )
         except TypeError as error:
             raise RuntimeError(
-                f"Payload schema does not match command {message_type}"
+                f"Message payload does not match command {msg_type}"
             ) from error

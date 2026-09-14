@@ -1,8 +1,8 @@
 from dataclasses import fields
 from nats.js.client import JetStreamContext
 
-from nats_contracts.bot.v1.control.common import BotMessage
-from nats_contracts.bot.v1.control.common.subjects import generate_bot_to_control_event_subject
+from nats_contracts.bot.control.v1.common import BotMessage
+from nats_contracts.bot.control.v1.common.subjects import generate_bot_to_control_event_subject
 
 from bot.events.event import Event
 from bot.state.general_state import GeneralState
@@ -21,7 +21,7 @@ class NatsPublisher():
     
     @staticmethod
     def build_payload(event: Event):
-        excluded = {"trace_id", "timestamp"}
+        excluded = {"message_id", "trace_id", "timestamp"}
         
         return {
             item.name: getattr(event, item.name)
@@ -41,7 +41,8 @@ class NatsPublisher():
         message = contract_type(
             bot_id=self.general_state.bot_id,
             bot_status=self.general_state.bot_status,
-            event={
+            message={
+                "message_id": str(event.message_id),
                 "trace_id": str(event.trace_id),
             },
             payload=self.build_payload(event),
@@ -50,9 +51,9 @@ class NatsPublisher():
         
         subject = generate_bot_to_control_event_subject(
             bot_id=self.general_state.bot_id,
-            event_version=message.event.event_version,
-            event_type=message.event.event_type,
-            event_name=message.event.event_name
+            event_version=message.message.message_version,
+            event_type=message.message.message_type,
+            event_name=message.message.message_name
         )
         
         return subject, message

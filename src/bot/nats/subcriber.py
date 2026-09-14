@@ -48,7 +48,7 @@ class NatsSubscriber:
             )
 
             command = self._decoder.decode(
-                message_type=message_type,
+                msg_type=message_type,
                 raw_message=message.data,
             )
         except CommandDecodeError as error:
