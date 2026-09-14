@@ -4,10 +4,9 @@ from bot.events.event import Event
 
 @dataclass
 class BotStartedEvent(Event):
-    event_type = "lifecycle"
-    event_name = "BotStartedEvent"
+    pass
     
-@dataclass
-class BotRunnedEvent(Event):
-    event_type = "lifecycle"
-    event_name = "BotRunnedEvent"
+# @dataclass
+# class BotRunnedEvent(Event):
+#     prev_status: str
+#     cur_status: str

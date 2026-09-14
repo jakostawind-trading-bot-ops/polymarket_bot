@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import secrets
 
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatuses
+from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
 
 def generate_bet_id():
     '''Генерирует рандомный бот ид'''
@@ -15,4 +15,4 @@ def generate_bet_id():
 @dataclass
 class GeneralState():
     bot_id: str
-    bot_status: LifecycleStatuses
+    bot_status: LifecycleStatus
