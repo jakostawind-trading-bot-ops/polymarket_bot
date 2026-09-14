@@ -2,7 +2,7 @@ from dataclasses import fields
 from nats.js.client import JetStreamContext
 
 from nats_contracts.bot.v1.control.common import BotMessage
-from nats_contracts.bot.v1.control.common.subjects import generate_bot_to_control_event_V1_subject
+from nats_contracts.bot.v1.control.common.subjects import generate_bot_to_control_event_subject
 
 from bot.events.event import Event
 from bot.state.general_state import GeneralState
@@ -48,8 +48,9 @@ class NatsPublisher():
             timestamp=event.timestamp
         )
         
-        subject = generate_bot_to_control_event_V1_subject(
+        subject = generate_bot_to_control_event_subject(
             bot_id=self.general_state.bot_id,
+            event_version=message.event.event_version,
             event_type=message.event.event_type,
             event_name=message.event.event_name
         )
