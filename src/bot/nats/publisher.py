@@ -16,7 +16,7 @@ class NatsPublisher():
         self._general_state = general_state
         
     async def publish_event(self, event: Event):
-        subject = f"bot.{self._general_state.bot_id}.event.{event.event_type}.{event.event_name}"
+        subject = f"bot.{self._general_state.bot_id}.to.control.event.{event.event_type}.{event.event_name}"
         
         message = {
             "bot_id": self._general_state.bot_id,

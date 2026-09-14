@@ -53,7 +53,7 @@ class CommandDecoder:
                 f"Unsupported command type: {message_type}"
             )
 
-        trace_id = message.get("trace_id")
+        trace_id = message.get("command", {}).get("trace_id")
 
         if not isinstance(trace_id, str) or not trace_id:
             raise CommandDecodeError("Missing or invalid trace_id")
