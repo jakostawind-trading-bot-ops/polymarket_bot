@@ -1,4 +1,10 @@
+import logging
+
 from bot.commands.command import Command, CommandHandler
+
+
+logger = logging.getLogger(__name__)
+
 
 class CommandDispatcher:
     def __init__(
@@ -13,4 +19,17 @@ class CommandDispatcher:
         if handler is None:
             raise RuntimeError(type(command))
 
+        logger.debug(
+            "Dispatching command command=%s handler=%s trace_id=%s",
+            type(command).__name__,
+            type(handler).__name__,
+            command.trace_id,
+        )
+
         await handler.handle(command)
+
+        logger.debug(
+            "Command dispatch completed command=%s trace_id=%s",
+            type(command).__name__,
+            command.trace_id,
+        )

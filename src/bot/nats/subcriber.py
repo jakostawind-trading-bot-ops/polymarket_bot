@@ -29,19 +29,56 @@ class NatsSubscriber:
         self._subscription = None
 
     async def start(self) -> None:
+        subject = f"{self._subject_prefix}>"
+        logger.info(
+            "Starting NATS command subscriber "
+            "stream=%s consumer=%s subject=%s",
+            self._stream_name,
+            self._consumer_name,
+            subject,
+        )
+
         self._subscription = await self._jetstream.subscribe(
-            subject=f"{self._subject_prefix}>",
-            durable = self._consumer_name,
+            subject=subject,
+            durable=self._consumer_name,
             cb=self._handle_message,
             manual_ack=True,
         )
 
+        logger.info(
+            "NATS command subscriber started consumer=%s",
+            self._consumer_name,
+        )
+
     async def close(self) -> None:
-        if self._subscription is not None:
-            await self._subscription.unsubscribe()
-            self._subscription = None
+        if self._subscription is None:
+            logger.debug(
+                "NATS command subscriber is already stopped "
+                "consumer=%s",
+                self._consumer_name,
+            )
+            return
+
+        logger.info(
+            "Stopping NATS command subscriber consumer=%s",
+            self._consumer_name,
+        )
+
+        await self._subscription.unsubscribe()
+        self._subscription = None
+
+        logger.info(
+            "NATS command subscriber stopped consumer=%s",
+            self._consumer_name,
+        )
 
     async def _handle_message(self, message: Msg) -> None:
+        logger.debug(
+            "NATS command received subject=%s size_bytes=%d",
+            message.subject,
+            len(message.data),
+        )
+
         try:
             message_type = self._extract_message_type(
                 message.subject,
@@ -51,6 +88,13 @@ class NatsSubscriber:
                 msg_type=message_type,
                 raw_message=message.data,
             )
+
+            logger.info(
+                "Command decoded command=%s trace_id=%s subject=%s",
+                type(command).__name__,
+                command.trace_id,
+                message.subject,
+            )
         except CommandDecodeError as error:
             logger.warning(
                 "Invalid command on subject %s: %s",
@@ -58,6 +102,10 @@ class NatsSubscriber:
                 error,
             )
             await message.ack()
+            logger.debug(
+                "Invalid command acknowledged subject=%s",
+                message.subject,
+            )
             return
         except Exception:
             logger.exception(
@@ -65,6 +113,10 @@ class NatsSubscriber:
                 message.subject,
             )
             await message.nak()
+            logger.debug(
+                "Failed command negatively acknowledged subject=%s",
+                message.subject,
+            )
             return
 
         try:
@@ -75,9 +127,26 @@ class NatsSubscriber:
                 message.subject,
             )
             await message.nak()
+            logger.debug(
+                "Failed command negatively acknowledged "
+                "command=%s trace_id=%s",
+                type(command).__name__,
+                command.trace_id,
+            )
             return
 
+        logger.info(
+            "Command handled command=%s trace_id=%s",
+            type(command).__name__,
+            command.trace_id,
+        )
+
         await message.ack()
+        logger.debug(
+            "Command acknowledged command=%s trace_id=%s",
+            type(command).__name__,
+            command.trace_id,
+        )
 
     def _extract_message_type(self, subject: str) -> str:
         if not subject.startswith(self._subject_prefix):

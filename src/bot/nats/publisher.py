@@ -1,4 +1,6 @@
+import logging
 from dataclasses import fields
+
 from nats.js.client import JetStreamContext
 
 from nats_contracts.bot.control.v1.common import BotMessage
@@ -7,6 +9,10 @@ from nats_contracts.bot.control.v1.common.subjects import generate_bot_to_contro
 from bot.events.event import Event
 from bot.state.general_state import GeneralState
 from bot.nats.contracts.registry import EVENT_CONTRACTS
+
+
+logger = logging.getLogger(__name__)
+
 
 class NatsPublisher():
     def __init__(
@@ -33,6 +39,13 @@ class NatsPublisher():
         self,
         event: Event
     ) -> tuple[str, BotMessage]:
+        logger.debug(
+            "Encoding event event=%s message_id=%s trace_id=%s",
+            type(event).__name__,
+            event.message_id,
+            event.trace_id,
+        )
+
         contract_type = EVENT_CONTRACTS.get(type(event))
         
         if contract_type is None:
@@ -55,13 +68,37 @@ class NatsPublisher():
             event_type=message.message.message_type,
             event_name=message.message.message_name
         )
-        
+
+        logger.debug(
+            "Event encoded event=%s subject=%s",
+            type(event).__name__,
+            subject,
+        )
+
         return subject, message
     
     async def publish_event(self, event: Event):
         subject, message = self.encode_event(event)
+
+        logger.info(
+            "Publishing event event=%s message_id=%s "
+            "trace_id=%s stream=%s subject=%s",
+            type(event).__name__,
+            event.message_id,
+            event.trace_id,
+            self.stream_name,
+            subject,
+        )
+
         await self.jetstream.publish(
             subject=subject,
             payload=message.model_dump_json().encode("utf-8"),
             stream=self.stream_name
+        )
+
+        logger.info(
+            "Event published event=%s message_id=%s subject=%s",
+            type(event).__name__,
+            event.message_id,
+            subject,
         )

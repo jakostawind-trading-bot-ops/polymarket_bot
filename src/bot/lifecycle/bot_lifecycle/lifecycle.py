@@ -1,6 +1,12 @@
+import logging
+
 from bot.state.general_state import GeneralState
 
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus 
+from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
+
+
+logger = logging.getLogger(__name__)
+
 
 class Lifecycle():
     def __init__(self,
@@ -20,7 +26,17 @@ class Lifecycle():
                             *allowed_statuses: LifecycleStatus,
                             new_status: LifecycleStatus):
         self.ensure_status(*allowed_statuses)
+
+        previous_status = self.general_state.bot_status
         self.general_state.bot_status = new_status
+
+        logger.info(
+            "Bot lifecycle status changed "
+            "bot_id=%s previous_status=%s new_status=%s",
+            self.general_state.bot_id,
+            previous_status.value,
+            new_status.value,
+        )
         
     def run(self):
         self.change_status(

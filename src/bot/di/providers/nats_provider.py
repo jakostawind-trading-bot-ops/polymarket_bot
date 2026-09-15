@@ -1,3 +1,4 @@
+import logging
 from collections.abc import AsyncIterator
 
 import nats
@@ -17,6 +18,10 @@ from bot.state.general_state import GeneralState
 CONTROL_TO_BOT_COMMANDS = "CONTROL_TO_BOT_COMMANDS"
 BOT_TO_CONTROL_EVENTS = "BOT_TO_CONTROL_EVENTS"
 
+
+logger = logging.getLogger(__name__)
+
+
 class NatsProvider(Provider):
     scope = Scope.APP
 
@@ -25,14 +30,24 @@ class NatsProvider(Provider):
         self,
         bootstrap_settings: BootstrapSettings,
     ) -> AsyncIterator[Client]:
-        client = await nats.connect(
-            bootstrap_settings.nats_url,
-        )
+        logger.info("Connecting to NATS")
+
+        try:
+            client = await nats.connect(
+                bootstrap_settings.nats_url,
+            )
+        except Exception:
+            logger.exception("Failed to connect to NATS")
+            raise
+
+        logger.info("NATS connection established")
 
         try:
             yield client
         finally:
+            logger.info("Closing NATS connection")
             await client.close()
+            logger.info("NATS connection closed")
 
     @provide
     def provide_jetstream(
@@ -81,4 +96,3 @@ class NatsProvider(Provider):
         finally:
             await subscriber.close()
             
-

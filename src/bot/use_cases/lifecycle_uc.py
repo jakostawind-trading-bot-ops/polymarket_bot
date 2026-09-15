@@ -3,9 +3,10 @@ import logging
 from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
-from bot.events.lifecycle_ev import BotStartedEvent#, BotRunnedEvent
+from bot.events.lifecycle_ev import BotStartedEvent  # , BotRunnedEvent
 
 logger = logging.getLogger(__name__)
+
 
 class StartBotUC():
     def __init__(self,
@@ -17,8 +18,19 @@ class StartBotUC():
         self.publisher = publisher_port
         
     async def execute(self):
-        logger.info("Bot started")   
+        logger.info(
+            "Starting bot initialization bot_id=%s status=%s",
+            self.general_state.bot_id,
+            self.general_state.bot_status.value,
+        )
+
         await self.publisher.publish_event(BotStartedEvent())
+
+        logger.info(
+            "Bot initialization completed bot_id=%s status=%s",
+            self.general_state.bot_id,
+            self.general_state.bot_status.value,
+        )
         
 # class RunBotUC():
 #     def __init__(self,
