@@ -11,3 +11,5 @@ wheels/
 
 .agents
 .codex
+
+.pytest_cache

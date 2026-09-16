@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 from bot.entities.market import Market
 
-class TrackingMarketsRepo(ABC):
+class TrackingMarketsRepoABC(ABC):
     @abstractmethod
-    def add(self, market: Market):
+    async def add(self, market: Market):
         pass
     
-    def remove(self, market_id):
+    async def remove(self, market_id):
         pass

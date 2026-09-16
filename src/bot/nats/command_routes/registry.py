@@ -2,7 +2,7 @@ from bot.nats.decoder import CommandRoute
 
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand
 
-from bot.commands.state_cmds.add_polymarket_state_cmd import AddPolymarketStateCommand
+from bot.commands.state_cmds.polymarket_state.add_polymarket_state_cmd import AddPolymarketStateCommand
 
 
 from nats_contracts.control.bot.v1.lifecycle import RunBotCmdMsg

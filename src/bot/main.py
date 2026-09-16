@@ -6,7 +6,7 @@ from bot.bootstrap import parse_cli_args
 from bot.di.container import create_container
 from bot.process_lifecycle import ProcessLifecycle
 from bot.ports.command_subscriber import CommandSubscriber
-from bot.use_cases.lifecycle_uc import StartBotUC
+from bot.use_cases.lifecycle.start_bot_uc import StartBotUC
 
 
 logger = logging.getLogger(__name__)

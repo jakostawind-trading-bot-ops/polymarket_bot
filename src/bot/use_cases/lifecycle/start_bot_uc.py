@@ -3,7 +3,7 @@ import logging
 from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
-from bot.events.lifecycle_ev import BotStartedEvent  # , BotRunnedEvent
+from bot.events.lifecycle_ev import BotStartedEvent
 
 logger = logging.getLogger(__name__)
 
@@ -31,19 +31,3 @@ class StartBotUC():
             self.general_state.bot_id,
             self.general_state.bot_status.value,
         )
-        
-# class RunBotUC():
-#     def __init__(self,
-#                  general_state: GeneralState,
-#                  lifecycle: Lifecycle,
-#                  publisher_port: EventPublisher):
-#         self.general_state = general_state
-#         self.lifecycle = lifecycle
-#         self.publisher = publisher_port
-        
-#     async def execute(self):
-#         prev_status = self.general_state.bot_status
-#         await self.publisher.publish_event(BotRunnedEvent(
-#             prev_status=prev_status,
-#             cur_status=self.general_state.bot_status
-#         ))
