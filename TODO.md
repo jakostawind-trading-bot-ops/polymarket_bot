@@ -22,7 +22,10 @@
   - [ ] tracking_markets
 
 # Repositories
-- [] TrackingMarketsRepo
+- [x] TrackingMarketsRepo
+
+# Polymarket API
+- [] поиск маркета по id и добавление его в репозиторий/стейт
 
 # Nats
 - [x] имя сабджекта должно быть bot.{bot_id}.event.{event_type}.{event_name}

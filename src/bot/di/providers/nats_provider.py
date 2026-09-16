@@ -75,6 +75,7 @@ class NatsProvider(Provider):
         general_state: GeneralState,
         decoder: CommandDecoder,
         dispatcher: CommandDispatcher,
+        publisher: EventPublisher,
     ) -> AsyncIterator[CommandSubscriber]:
         subscriber = NatsSubscriber(
             jetstream=jetstream,
@@ -87,6 +88,7 @@ class NatsProvider(Provider):
             ),
             decoder=decoder,
             dispatcher=dispatcher,
+            publisher=publisher,
         )
         
         await subscriber.start()

@@ -19,9 +19,14 @@ testpaths = ["tests"]
 requires = ["uv_build>=0.12.10,<0.13"]
 build-backend = "uv_build"
 
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
 [tool.uv.build-backend]
 module-name = "bot"
 namespace = true
 
 [tool.uv.sources]
-nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "4095d481ece45f4618b73d2c2d690a6d1ed95489" }
+nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "d41ec262cf5eb14ff4238245866727c396c4e702" }

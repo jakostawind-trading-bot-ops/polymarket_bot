@@ -4,7 +4,9 @@ from nats.aio.msg import Msg
 from nats.js.client import JetStreamContext
 
 from bot.commands.dispatcher import CommandDispatcher
+from bot.events.failed_ev import CommandFailedEvent
 from bot.nats.decoder import CommandDecodeError, CommandDecoder
+from bot.ports.event_publisher import EventPublisher
 
 
 logger = logging.getLogger(__name__)
@@ -19,6 +21,7 @@ class NatsSubscriber:
         consumer_name: str,
         decoder: CommandDecoder,
         dispatcher: CommandDispatcher,
+        publisher: EventPublisher,
     ) -> None:
         self._jetstream = jetstream
         self._stream_name = stream_name
@@ -26,6 +29,7 @@ class NatsSubscriber:
         self._consumer_name = consumer_name
         self._decoder = decoder
         self._dispatcher = dispatcher
+        self._publisher = publisher
         self._subscription = None
 
     async def start(self) -> None:
@@ -41,6 +45,7 @@ class NatsSubscriber:
         self._subscription = await self._jetstream.subscribe(
             subject=subject,
             durable=self._consumer_name,
+            stream=self._stream_name,
             cb=self._handle_message,
             manual_ack=True,
         )
@@ -101,9 +106,9 @@ class NatsSubscriber:
                 message.subject,
                 error,
             )
-            await message.ack()
+            await message.term()
             logger.debug(
-                "Invalid command acknowledged subject=%s",
+                "Invalid command delivery terminated subject=%s",
                 message.subject,
             )
             return
@@ -112,23 +117,41 @@ class NatsSubscriber:
                 "Command decoding failed on subject %s",
                 message.subject,
             )
-            await message.nak()
+            await message.term()
             logger.debug(
-                "Failed command negatively acknowledged subject=%s",
+                "Failed command delivery terminated subject=%s",
                 message.subject,
             )
             return
 
         try:
             await self._dispatcher.dispatch(command)
-        except Exception:
+        except Exception as error:
             logger.exception(
-                "Command processing failed on subject %s",
+                "Command processing failed command=%s trace_id=%s subject=%s",
+                type(command).__name__,
+                command.trace_id,
                 message.subject,
             )
-            await message.nak()
+            try:
+                await self._publisher.publish_event(
+                    CommandFailedEvent(
+                        trace_id=command.trace_id,
+                        command_name=type(command).__name__,
+                        error=f"{type(error).__name__}: {error}",
+                    )
+                )
+            except Exception:
+                logger.exception(
+                    "Failed to publish command failure command=%s trace_id=%s",
+                    type(command).__name__,
+                    command.trace_id,
+                )
+            finally:
+                await message.term()
+
             logger.debug(
-                "Failed command negatively acknowledged "
+                "Failed command delivery terminated "
                 "command=%s trace_id=%s",
                 type(command).__name__,
                 command.trace_id,
