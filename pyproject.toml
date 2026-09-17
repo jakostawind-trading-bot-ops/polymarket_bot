@@ -30,4 +30,4 @@ module-name = "bot"
 namespace = true
 
 [tool.uv.sources]
-nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "d41ec262cf5eb14ff4238245866727c396c4e702" }
+nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "7bccf8c146a590b1aac02a2fd49f70869d39f55e" }

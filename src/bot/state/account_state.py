@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class PolymarketState():
+class AccountState():
     # Account
     nickname: str
     wallet: str

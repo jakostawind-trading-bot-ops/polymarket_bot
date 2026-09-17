@@ -65,8 +65,7 @@ class NatsPublisher():
         subject = generate_bot_to_control_event_subject(
             bot_id=self.general_state.bot_id,
             event_version=message.message.message_version,
-            event_type=message.message.message_type,
-            event_name=message.message.message_name
+            subject_suffix=contract_type.subject_suffix(),
         )
 
         logger.debug(

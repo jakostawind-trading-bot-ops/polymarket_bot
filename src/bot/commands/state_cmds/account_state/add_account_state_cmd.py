@@ -6,13 +6,13 @@ from bot.commands.command import Command, CommandHandler
 logger = logging.getLogger(__name__)
 
 @dataclass
-class AddPolymarketStateCommand(Command):
+class AddAccountStateCommand(Command):
     nickname: str
     wallet: str
     
-class AddPolymarketStateHandler(CommandHandler):
-    async def handle(self, command: AddPolymarketStateCommand):
+class AddAccountStateHandler(CommandHandler):
+    async def handle(self, command: AddAccountStateCommand):
         logger.info(
-            "AddPolymarketStateHandler runned, trace_id=%s",
+            "AddAccountStateHandler runned, trace_id=%s",
             command.trace_id
         )

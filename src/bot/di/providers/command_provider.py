@@ -5,7 +5,8 @@ from bot.transport.nats.decoder import CommandDecoder
 from bot.transport.nats.command_routes.registry import COMMAND_ROUTES
 
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand, RunBotHandler
-from bot.commands.state_cmds.polymarket_state.add_polymarket_state_cmd import AddPolymarketStateCommand, AddPolymarketStateHandler
+from bot.commands.state_cmds.account_state.add_account_state_cmd import AddAccountStateCommand, AddAccountStateHandler
+from bot.commands.state_cmds.trading_state.add_tracking_market_cmd import AddTrackingMarketCommand, AddTrackingMarketHandle
 
 
 class CommandProvider(Provider):
@@ -14,8 +15,11 @@ class CommandProvider(Provider):
     # lifecycle
     run_bot_handler = provide(RunBotHandler)
     
-    # state
-    add_polymarket_state_handler = provide(AddPolymarketStateHandler)
+    # acccont state
+    add_account_state_handler = provide(AddAccountStateHandler)
+    
+    # trading_state
+    add_tracking_market_handler = provide(AddTrackingMarketHandle)
 
     @provide
     def provide_decoder(self) -> CommandDecoder:
@@ -29,8 +33,11 @@ class CommandProvider(Provider):
         # lifecycle
         run_bot_handler: RunBotHandler,
         
-        # state
-        add_polymarket_state_handler: AddPolymarketStateHandler
+        # account state
+        add_account_state_handler: AddAccountStateHandler,
+        
+        # trading_state
+        add_tracking_market_handler: AddTrackingMarketHandle
     ) -> CommandDispatcher:
         return CommandDispatcher(
             handlers={
@@ -38,6 +45,9 @@ class CommandProvider(Provider):
                 RunBotCommand: run_bot_handler,
                 
                 # state
-                AddPolymarketStateCommand: add_polymarket_state_handler
+                AddAccountStateCommand: add_account_state_handler,
+                
+                # trading_state
+                AddTrackingMarketCommand: add_tracking_market_handler
             },
         )

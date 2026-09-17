@@ -4,5 +4,5 @@ from bot.events.event import Event
 from bot.entities.market import Market
 
 @dataclass
-class MarketAddedInTrackingMarketsEvent(Event):
+class TrackingMarketAddedEvent(Event):
     market: Market
