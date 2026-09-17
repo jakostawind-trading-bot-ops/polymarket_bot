@@ -12,7 +12,7 @@ from bot.events.event import Event
 from bot.events.failed_ev import CommandFailedEvent
 from bot.events.lifecycle_ev import BotStartedEvent
 from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
-from bot.nats.publisher import NatsPublisher
+from bot.transport.nats.publisher import NatsPublisher
 from bot.state.general_state import GeneralState
 
 

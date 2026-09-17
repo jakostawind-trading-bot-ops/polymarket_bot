@@ -1,0 +1,1 @@
+GET_MARKET_BY_ID = "https://gamma-api.polymarket.com/markets/{id}"

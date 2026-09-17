@@ -5,7 +5,7 @@ from nats.js.client import JetStreamContext
 
 from bot.commands.dispatcher import CommandDispatcher
 from bot.events.failed_ev import CommandFailedEvent
-from bot.nats.decoder import CommandDecodeError, CommandDecoder
+from bot.transport.nats.decoder import CommandDecodeError, CommandDecoder
 from bot.ports.event_publisher import EventPublisher
 
 

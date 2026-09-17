@@ -1,8 +1,8 @@
 from dishka import provide, Provider, Scope
 
 from bot.commands.dispatcher import CommandDispatcher
-from bot.nats.decoder import CommandDecoder
-from bot.nats.command_routes.registry import COMMAND_ROUTES
+from bot.transport.nats.decoder import CommandDecoder
+from bot.transport.nats.command_routes.registry import COMMAND_ROUTES
 
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand, RunBotHandler
 from bot.commands.state_cmds.polymarket_state.add_polymarket_state_cmd import AddPolymarketStateCommand, AddPolymarketStateHandler

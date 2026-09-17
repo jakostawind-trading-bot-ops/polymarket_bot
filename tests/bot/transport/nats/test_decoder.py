@@ -5,8 +5,8 @@ from pydantic import ValidationError
 
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand
 from bot.commands.state_cmds.polymarket_state.add_polymarket_state_cmd import AddPolymarketStateCommand
-from bot.nats.command_routes.registry import COMMAND_ROUTES
-from bot.nats.decoder import CommandDecodeError, CommandDecoder, CommandRoute
+from bot.transport.nats.command_routes.registry import COMMAND_ROUTES
+from bot.transport.nats.decoder import CommandDecodeError, CommandDecoder, CommandRoute
 
 
 @pytest.fixture

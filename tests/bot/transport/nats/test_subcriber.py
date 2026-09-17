@@ -10,9 +10,9 @@ from nats.js.client import JetStreamContext
 from bot.commands.dispatcher import CommandDispatcher
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand
 from bot.events.failed_ev import CommandFailedEvent
-from bot.nats.command_routes.registry import COMMAND_ROUTES
-from bot.nats.decoder import CommandDecodeError, CommandDecoder
-from bot.nats.subcriber import NatsSubscriber
+from bot.transport.nats.command_routes.registry import COMMAND_ROUTES
+from bot.transport.nats.decoder import CommandDecodeError, CommandDecoder
+from bot.transport.nats.subcriber import NatsSubscriber
 from bot.ports.event_publisher import EventPublisher
 
 

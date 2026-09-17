@@ -1,4 +1,4 @@
-from bot.nats.decoder import CommandRoute
+from bot.transport.nats.decoder import CommandRoute
 
 from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand
 

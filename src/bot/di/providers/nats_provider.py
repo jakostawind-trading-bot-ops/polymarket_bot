@@ -8,9 +8,9 @@ from nats.js.client import JetStreamContext
 
 from bot.bootstrap import BootstrapSettings
 from bot.commands.dispatcher import CommandDispatcher
-from bot.nats.decoder import CommandDecoder
-from bot.nats.publisher import NatsPublisher
-from bot.nats.subcriber import NatsSubscriber
+from bot.transport.nats.decoder import CommandDecoder
+from bot.transport.nats.publisher import NatsPublisher
+from bot.transport.nats.subcriber import NatsSubscriber
 from bot.ports.command_subscriber import CommandSubscriber
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState

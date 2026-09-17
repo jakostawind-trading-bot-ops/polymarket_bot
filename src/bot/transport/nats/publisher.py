@@ -8,7 +8,7 @@ from nats_contracts.bot.control.v1.common.subjects import generate_bot_to_contro
 
 from bot.events.event import Event
 from bot.state.general_state import GeneralState
-from bot.nats.event_contracts.registry import EVENT_CONTRACTS
+from bot.transport.nats.event_contracts.registry import EVENT_CONTRACTS
 
 
 logger = logging.getLogger(__name__)
