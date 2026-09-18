@@ -1,5 +1,5 @@
 import logging
-from dataclasses import fields
+from dataclasses import asdict
 
 from nats.js.client import JetStreamContext
 
@@ -30,9 +30,8 @@ class NatsPublisher():
         excluded = {"message_id", "trace_id", "timestamp"}
         
         return {
-            item.name: getattr(event, item.name)
-            for item in fields(event)
-            if item.name not in excluded
+            name: value for name, value in asdict(event).items()
+            if name not in excluded
         }
     
     def encode_event(
@@ -64,7 +63,6 @@ class NatsPublisher():
         
         subject = generate_bot_to_control_event_subject(
             bot_id=self.general_state.bot_id,
-            event_version=message.message.message_version,
             subject_suffix=contract_type.subject_suffix(),
         )
 
