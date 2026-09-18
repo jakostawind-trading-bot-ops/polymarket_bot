@@ -39,7 +39,7 @@ class NatsPublisher():
         event: Event
     ) -> tuple[str, BotMessage]:
         logger.debug(
-            "Encoding event event=%s message_id=%s trace_id=%s",
+            "Кодирование event event=%s message_id=%s trace_id=%s",
             type(event).__name__,
             event.message_id,
             event.trace_id,
@@ -67,7 +67,7 @@ class NatsPublisher():
         )
 
         logger.debug(
-            "Event encoded event=%s subject=%s",
+            "Event закодирован event=%s subject=%s",
             type(event).__name__,
             subject,
         )
@@ -78,7 +78,7 @@ class NatsPublisher():
         subject, message = self.encode_event(event)
 
         logger.info(
-            "Publishing event event=%s message_id=%s "
+            "Публикация event event=%s message_id=%s "
             "trace_id=%s stream=%s subject=%s",
             type(event).__name__,
             event.message_id,
@@ -94,7 +94,7 @@ class NatsPublisher():
         )
 
         logger.info(
-            "Event published event=%s message_id=%s subject=%s",
+            "Event опубликован event=%s message_id=%s subject=%s",
             type(event).__name__,
             event.message_id,
             subject,

@@ -30,24 +30,24 @@ class NatsProvider(Provider):
         self,
         bootstrap_settings: BootstrapSettings,
     ) -> AsyncIterator[Client]:
-        logger.info("Connecting to NATS")
+        logger.info("Подключение к NATS")
 
         try:
             client = await nats.connect(
                 bootstrap_settings.nats_url,
             )
         except Exception:
-            logger.exception("Failed to connect to NATS")
+            logger.exception("Не удалось подключиться к NATS")
             raise
 
-        logger.info("NATS connection established")
+        logger.info("Соединение с NATS установлено")
 
         try:
             yield client
         finally:
-            logger.info("Closing NATS connection")
+            logger.info("Закрытие соединения с NATS")
             await client.close()
-            logger.info("NATS connection closed")
+            logger.info("Соединение с NATS закрыто")
 
     @provide
     def provide_jetstream(

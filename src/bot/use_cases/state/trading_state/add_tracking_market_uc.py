@@ -23,7 +23,7 @@ class AddTrackingMarketUC():
         self.http_client = http_client_port
         
     async def execute(self, market_id: int):
-        logger.info("Adding tracking market: market_id=%s", market_id)
+        logger.info("Добавление рынка для отслеживания: market_id=%s", market_id)
         stage = "fetch_market"
 
         try:
@@ -31,20 +31,20 @@ class AddTrackingMarketUC():
                 http_client_port=self.http_client,
                 market_id=market_id,
             )
-            logger.info("Market fetched: market_id=%s", market_id)
+            logger.info("Данные рынка получены: market_id=%s", market_id)
 
             stage = "repository_add"
             await self.tracking_markets_repo_abc.add(market=market)
-            logger.info("Repository add completed: market_id=%s", market_id)
+            logger.info("Добавление в repository завершено: market_id=%s", market_id)
 
             stage = "publish_event"
             await self.publisher.publish_event(
                 TrackingMarketAddedEvent(market=market)
             )
-            logger.info("Market added event published: market_id=%s", market_id)
+            logger.info("Опубликован event добавления рынка: market_id=%s", market_id)
         except Exception:
             logger.exception(
-                "Adding tracking market failed: market_id=%s stage=%s",
+                "Не удалось добавить рынок для отслеживания: market_id=%s stage=%s",
                 market_id,
                 stage,
             )

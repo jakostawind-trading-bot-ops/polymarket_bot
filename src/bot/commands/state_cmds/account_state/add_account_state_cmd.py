@@ -13,6 +13,6 @@ class AddAccountStateCommand(Command):
 class AddAccountStateHandler(CommandHandler):
     async def handle(self, command: AddAccountStateCommand):
         logger.info(
-            "AddAccountStateHandler runned, trace_id=%s",
+            "Запущен AddAccountStateHandler, trace_id=%s",
             command.trace_id
         )

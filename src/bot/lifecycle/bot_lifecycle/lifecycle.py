@@ -31,7 +31,7 @@ class Lifecycle():
         self.general_state.bot_status = new_status
 
         logger.info(
-            "Bot lifecycle status changed "
+            "Статус lifecycle бота изменён "
             "bot_id=%s previous_status=%s new_status=%s",
             self.general_state.bot_id,
             previous_status.value,

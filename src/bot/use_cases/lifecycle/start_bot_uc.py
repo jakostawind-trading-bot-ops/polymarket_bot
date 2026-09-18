@@ -19,7 +19,7 @@ class StartBotUC():
         
     async def execute(self):
         logger.info(
-            "Starting bot initialization bot_id=%s status=%s",
+            "Начало инициализации бота bot_id=%s status=%s",
             self.general_state.bot_id,
             self.general_state.bot_status.value,
         )
@@ -27,7 +27,7 @@ class StartBotUC():
         await self.publisher.publish_event(BotStartedEvent())
 
         logger.info(
-            "Bot initialization completed bot_id=%s status=%s",
+            "Инициализация бота завершена bot_id=%s status=%s",
             self.general_state.bot_id,
             self.general_state.bot_status.value,
         )

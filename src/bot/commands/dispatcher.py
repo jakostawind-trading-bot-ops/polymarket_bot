@@ -20,7 +20,7 @@ class CommandDispatcher:
             raise RuntimeError(type(command))
 
         logger.debug(
-            "Dispatching command command=%s handler=%s trace_id=%s",
+            "Передача команды в handler command=%s handler=%s trace_id=%s",
             type(command).__name__,
             type(handler).__name__,
             command.trace_id,
@@ -29,7 +29,7 @@ class CommandDispatcher:
         await handler.handle(command)
 
         logger.debug(
-            "Command dispatch completed command=%s trace_id=%s",
+            "Dispatch команды завершён command=%s trace_id=%s",
             type(command).__name__,
             command.trace_id,
         )

@@ -18,6 +18,6 @@ class RunBotHandler(CommandHandler):
         command: RunBotCommand,
     ) -> None:
         logger.info(
-            "Handling run bot command trace_id=%s",
+            "Обработка команды запуска бота trace_id=%s",
             command.trace_id,
         )

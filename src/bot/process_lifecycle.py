@@ -14,7 +14,7 @@ class ProcessLifecycle:
         loop = asyncio.get_running_loop()
         shutdown_signals = (signal.SIGINT, signal.SIGTERM)
 
-        logger.debug("Registering process shutdown handlers")
+        logger.debug("Регистрация shutdown handlers процесса")
 
         for shutdown_signal in shutdown_signals:
             loop.add_signal_handler(
@@ -23,7 +23,7 @@ class ProcessLifecycle:
                 shutdown_signal,
             )
 
-        logger.info("Process is waiting for a shutdown signal")
+        logger.info("Процесс ожидает сигнал shutdown")
 
         try:
             await self._shutdown_event.wait()
@@ -31,14 +31,14 @@ class ProcessLifecycle:
             for shutdown_signal in shutdown_signals:
                 loop.remove_signal_handler(shutdown_signal)
 
-            logger.debug("Process shutdown handlers removed")
+            logger.debug("Shutdown handlers процесса удалены")
 
     def _handle_shutdown_signal(
         self,
         shutdown_signal: signal.Signals,
     ) -> None:
         logger.info(
-            "Shutdown signal received signal=%s",
+            "Получен сигнал shutdown signal=%s",
             shutdown_signal.name,
         )
         self._shutdown_event.set()

@@ -35,7 +35,7 @@ class NatsSubscriber:
     async def start(self) -> None:
         subject = f"{self._subject_prefix}>"
         logger.info(
-            "Starting NATS command subscriber "
+            "Запуск NATS subscriber команд "
             "stream=%s consumer=%s subject=%s",
             self._stream_name,
             self._consumer_name,
@@ -51,21 +51,21 @@ class NatsSubscriber:
         )
 
         logger.info(
-            "NATS command subscriber started consumer=%s",
+            "NATS subscriber команд запущен consumer=%s",
             self._consumer_name,
         )
 
     async def close(self) -> None:
         if self._subscription is None:
             logger.debug(
-                "NATS command subscriber is already stopped "
+                "NATS subscriber команд уже остановлен "
                 "consumer=%s",
                 self._consumer_name,
             )
             return
 
         logger.info(
-            "Stopping NATS command subscriber consumer=%s",
+            "Остановка NATS subscriber команд consumer=%s",
             self._consumer_name,
         )
 
@@ -73,13 +73,13 @@ class NatsSubscriber:
         self._subscription = None
 
         logger.info(
-            "NATS command subscriber stopped consumer=%s",
+            "NATS subscriber команд остановлен consumer=%s",
             self._consumer_name,
         )
 
     async def _handle_message(self, message: Msg) -> None:
         logger.debug(
-            "NATS command received subject=%s size_bytes=%d",
+            "Получена команда из NATS subject=%s size_bytes=%d",
             message.subject,
             len(message.data),
         )
@@ -95,31 +95,31 @@ class NatsSubscriber:
             )
 
             logger.info(
-                "Command decoded command=%s trace_id=%s subject=%s",
+                "Команда декодирована command=%s trace_id=%s subject=%s",
                 type(command).__name__,
                 command.trace_id,
                 message.subject,
             )
         except CommandDecodeError as error:
             logger.warning(
-                "Invalid command on subject %s: %s",
+                "Некорректная команда в subject %s: %s",
                 message.subject,
                 error,
             )
             await message.term()
             logger.debug(
-                "Invalid command delivery terminated subject=%s",
+                "Доставка некорректной команды прекращена subject=%s",
                 message.subject,
             )
             return
         except Exception:
             logger.exception(
-                "Command decoding failed on subject %s",
+                "Не удалось декодировать команду в subject %s",
                 message.subject,
             )
             await message.term()
             logger.debug(
-                "Failed command delivery terminated subject=%s",
+                "Доставка команды прекращена из-за ошибки subject=%s",
                 message.subject,
             )
             return
@@ -128,7 +128,7 @@ class NatsSubscriber:
             await self._dispatcher.dispatch(command)
         except Exception as error:
             logger.exception(
-                "Command processing failed command=%s trace_id=%s subject=%s",
+                "Ошибка обработки команды command=%s trace_id=%s subject=%s",
                 type(command).__name__,
                 command.trace_id,
                 message.subject,
@@ -143,7 +143,7 @@ class NatsSubscriber:
                 )
             except Exception:
                 logger.exception(
-                    "Failed to publish command failure command=%s trace_id=%s",
+                    "Не удалось опубликовать event ошибки команды command=%s trace_id=%s",
                     type(command).__name__,
                     command.trace_id,
                 )
@@ -151,7 +151,7 @@ class NatsSubscriber:
                 await message.term()
 
             logger.debug(
-                "Failed command delivery terminated "
+                "Доставка команды прекращена из-за ошибки "
                 "command=%s trace_id=%s",
                 type(command).__name__,
                 command.trace_id,
@@ -159,14 +159,14 @@ class NatsSubscriber:
             return
 
         logger.info(
-            "Command handled command=%s trace_id=%s",
+            "Команда обработана command=%s trace_id=%s",
             type(command).__name__,
             command.trace_id,
         )
 
         await message.ack()
         logger.debug(
-            "Command acknowledged command=%s trace_id=%s",
+            "Для команды отправлен ACK command=%s trace_id=%s",
             type(command).__name__,
             command.trace_id,
         )

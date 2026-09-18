@@ -14,24 +14,24 @@ logger = logging.getLogger(__name__)
 
 async def main() -> None:
     settings = parse_cli_args()
-    logger.info("Bot process starting")
+    logger.info("Запуск процесса бота")
 
     async with create_container(settings) as container:
         await container.get(CommandSubscriber)
-        logger.info("Command transport initialized")
+        logger.info("Transport команд инициализирован")
 
         start_bot_use_case = await container.get(StartBotUC)
         process_lifecycle = ProcessLifecycle()
 
         await start_bot_use_case.execute()
         logger.info(
-            "Bot startup use case completed; waiting for shutdown"
+            "Use case запуска бота завершён; ожидание shutdown"
         )
 
         await process_lifecycle.wait_for_shutdown()
-        logger.info("Shutdown requested; closing application resources")
+        logger.info("Запрошен shutdown; закрытие ресурсов приложения")
 
-    logger.info("Bot process stopped")
+    logger.info("Процесс бота остановлен")
 
 
 if __name__ == "__main__":
