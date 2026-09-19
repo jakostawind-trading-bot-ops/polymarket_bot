@@ -1,5 +1,5 @@
 - [x] сделать логирование
-- [ ] сделать ивент в nats_contacts TrackingMarketAddedEvMsg и к нему ивент в боте
+- [x] сделать ивент в nats_contacts TrackingMarketAddedEvMsg и к нему ивент в боте
 
 # Process Lifecycle
 - [x] сделать чтобы бот работал бесконечно 

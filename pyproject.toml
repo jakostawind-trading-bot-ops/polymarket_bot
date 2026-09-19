@@ -9,6 +9,7 @@ dependencies = [
     "httpx>=0.28.1",
     "nats-contracts",
     "nats-py>=2.15.0",
+    "polymarket-sdk",
     "pydantic>=2.13.5",
 ]
 
@@ -31,3 +32,4 @@ namespace = true
 
 [tool.uv.sources]
 nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "7e0fccf8c2c7e034aa27dc75c7c03ae4912d9691" }
+polymarket-sdk = { git = "https://github.com/jakostawind-trading-bot-ops/polymarket_sdk", rev = "396667daf22ecb90586a51937c4d933286cdbfbf" }

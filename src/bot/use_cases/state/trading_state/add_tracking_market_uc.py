@@ -1,11 +1,13 @@
 import logging
 
 from bot.repositories.abstract.tracking_markets import TrackingMarketsRepoABC
+from bot.entities.market import Market
 from bot.state.trading_state import TradingState
 from bot.ports.event_publisher import EventPublisher
 from bot.ports.http_client import HttpClient
 from bot.events.trading_state_ev import TrackingMarketAddedEvent
-from bot.transport.http.polymarket_api.markets import get_market_by_id
+
+from polymarket_sdk.http import get_market_by_id 
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +29,11 @@ class AddTrackingMarketUC():
         stage = "fetch_market"
 
         try:
-            market = await get_market_by_id(
-                http_client_port=self.http_client,
+            sdk_market = await get_market_by_id(
+                http_client=self.http_client,
                 market_id=market_id,
             )
+            market = Market(**sdk_market.model_dump())
             logger.info("Данные рынка получены: market_id=%s", market_id)
 
             stage = "repository_add"
