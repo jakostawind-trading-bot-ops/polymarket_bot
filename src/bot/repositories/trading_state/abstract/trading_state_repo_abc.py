@@ -13,3 +13,7 @@ class TradingStateRepoABC(ABC):
     @abstractmethod
     async def get_market_state_repo(self, market_id: int):
         pass
+    
+    @abstractmethod
+    async def get_all_data(self):
+        pass

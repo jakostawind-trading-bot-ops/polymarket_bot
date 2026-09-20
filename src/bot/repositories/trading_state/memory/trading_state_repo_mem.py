@@ -27,3 +27,6 @@ class TradingStateRepoMem(TradingStateRepoABC):
         
     async def get_market_state_repo(self, market_id: int):
         return self.market_state_repos[market_id]
+    
+    async def get_all_data(self):
+        return self.trading_state

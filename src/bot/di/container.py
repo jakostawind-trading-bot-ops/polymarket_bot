@@ -2,6 +2,7 @@ from dishka import make_async_container
 
 from bot.bootstrap import BootstrapSettings
 from bot.di.providers.bootstrap_provider import BootstrapSettingsProvider
+from bot.di.providers.debug_server_provider import DebugProvider
 from bot.di.providers.http_provider import HttpProvider
 from bot.di.providers.nats_provider import NatsProvider
 from bot.di.providers.command_provider import CommandProvider
@@ -20,6 +21,9 @@ def create_container(bootstrap_settings: BootstrapSettings):
         
         # use cases
         LifecycleUCProvider(),
+        
+        DebugProvider(),
+        
         
         context={BootstrapSettings: bootstrap_settings}
     )

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 
+from bot.debug_server import DebugServer
 from bot.logging_config import configure_logging
 from bot.bootstrap import parse_cli_args
 from bot.di.container import create_container
@@ -27,6 +28,8 @@ async def main() -> None:
         logger.info(
             "Use case запуска бота завершён; ожидание shutdown"
         )
+        
+        await container.get(DebugServer | None)
 
         await process_lifecycle.wait_for_shutdown()
         logger.info("Запрошен shutdown; закрытие ресурсов приложения")
