@@ -31,5 +31,5 @@ module-name = "bot"
 namespace = true
 
 [tool.uv.sources]
-nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "7e0fccf8c2c7e034aa27dc75c7c03ae4912d9691" }
+nats-contracts = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git", rev = "5d77a1eed30ab0c13c152db1ff2c15745fb6568a" }
 polymarket-sdk = { git = "https://github.com/jakostawind-trading-bot-ops/polymarket_sdk", rev = "396667daf22ecb90586a51937c4d933286cdbfbf" }

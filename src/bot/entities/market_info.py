@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Market():
+class MarketInfo():
     market_id: int
     question: str
     asset_ids: tuple[int, ...]

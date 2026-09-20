@@ -1,13 +1,18 @@
-from dishka import provide, Provider, Scope
+from dishka import Provider, Scope, provide
 
 from bot.state.trading_state import TradingState
+from bot.repositories.trading_state.abstract.trading_state_repo_abc import TradingStateRepoABC
+from bot.repositories.trading_state.memory.trading_state_repo_mem import TradingStateRepoMem
 
-from bot.repositories.abstract.tracking_markets import TrackingMarketsRepoABC
-from bot.repositories.memory.tracking_markets import MemTrackingMarketsRepo
 
 class TradingStateProvider(Provider):
     scope = Scope.APP
-    
-    tracking_markets = provide(MemTrackingMarketsRepo, provides=TrackingMarketsRepoABC)
-    
-    trading_state = provide(TradingState)
+
+    @provide
+    def trading_state(self) -> TradingState:
+        return TradingState(tracking_markets={})
+
+    trading_state_repo = provide(
+        TradingStateRepoMem,
+        provides=TradingStateRepoABC,
+    )

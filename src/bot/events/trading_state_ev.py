@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from bot.events.event import Event
-from bot.entities.market import Market
+from bot.entities.market_info import MarketInfo
 
 @dataclass
 class TrackingMarketAddedEvent(Event):
-    market: Market
+    market_info: MarketInfo

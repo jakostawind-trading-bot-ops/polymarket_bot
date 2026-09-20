@@ -1,8 +1,7 @@
 import logging
 
-from bot.repositories.abstract.tracking_markets import TrackingMarketsRepoABC
-from bot.entities.market import Market
-from bot.state.trading_state import TradingState
+from bot.repositories.trading_state.abstract.trading_state_repo_abc import TradingStateRepoABC
+from bot.entities.market_info import MarketInfo
 from bot.ports.event_publisher import EventPublisher
 from bot.ports.http_client import HttpClient
 from bot.events.trading_state_ev import TrackingMarketAddedEvent
@@ -14,13 +13,11 @@ logger = logging.getLogger(__name__)
 class AddTrackingMarketUC():
     def __init__(
         self,
-        tracking_markets_repo_abc: TrackingMarketsRepoABC,
-        trading_state: TradingState,
+        trading_state_repo: TradingStateRepoABC,
         publisher_port: EventPublisher,
         http_client_port: HttpClient
     ):
-        self.tracking_markets_repo_abc = tracking_markets_repo_abc
-        self.trading_state = trading_state
+        self.trading_state_repo = trading_state_repo
         self.publisher = publisher_port
         self.http_client = http_client_port
         
@@ -33,16 +30,16 @@ class AddTrackingMarketUC():
                 http_client=self.http_client,
                 market_id=market_id,
             )
-            market = Market(**sdk_market.model_dump())
+            market_info = MarketInfo(**sdk_market.model_dump())
             logger.info("Данные рынка получены: market_id=%s", market_id)
 
-            stage = "repository_add"
-            await self.tracking_markets_repo_abc.add(market=market)
-            logger.info("Добавление в repository завершено: market_id=%s", market_id)
+            stage = "trading_stage_add"
+            await self.trading_state_repo.track_market(market_info=market_info)
+            logger.info("Добавление в trading_stage завершено: market_id=%s", market_id)
 
             stage = "publish_event"
             await self.publisher.publish_event(
-                TrackingMarketAddedEvent(market=market)
+                TrackingMarketAddedEvent(market_info=market_info)
             )
             logger.info("Опубликован event добавления рынка: market_id=%s", market_id)
         except Exception:

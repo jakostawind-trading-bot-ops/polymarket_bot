@@ -4,7 +4,7 @@ import httpx
 import pytest
 from pydantic import ValidationError
 
-from bot.entities.market import Market
+from bot.entities.market_info import Market
 from bot.transport.http.httpx_client import HttpxClient
 from bot.transport.http.polymarket_api.markets import get_market_by_id
 
