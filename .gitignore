@@ -13,3 +13,5 @@ wheels/
 .codex
 
 .pytest_cache
+
+logs/
