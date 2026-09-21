@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 
 from bot.debug_server import DebugServer
 from bot.logging_config import configure_logging
@@ -30,6 +31,14 @@ async def main() -> None:
         )
         
         await container.get(DebugServer | None)
+        
+        if settings.debug and sys.stdin.isatty():
+            from ptpython.repl import embed
+            await embed(
+                globals={"container": container},
+                return_asyncio_coroutine=True,
+                patch_stdout=True
+            )
 
         await process_lifecycle.wait_for_shutdown()
         logger.info("Запрошен shutdown; закрытие ресурсов приложения")
