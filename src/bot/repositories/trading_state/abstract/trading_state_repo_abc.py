@@ -17,3 +17,7 @@ class TradingStateRepoABC(ABC):
     @abstractmethod
     async def get_all_data(self):
         pass
+    
+    @abstractmethod
+    async def is_empty(self) -> bool:
+        pass

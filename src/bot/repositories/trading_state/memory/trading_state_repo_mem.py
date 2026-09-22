@@ -30,3 +30,6 @@ class TradingStateRepoMem(TradingStateRepoABC):
     
     async def get_all_data(self):
         return self.trading_state
+    
+    async def is_empty(self) -> bool:
+        return not self.trading_state.tracking_markets
