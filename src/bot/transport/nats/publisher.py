@@ -75,23 +75,33 @@ class NatsPublisher():
         return subject, message
     
     async def publish_event(self, event: Event):
-        subject, message = self.encode_event(event)
+        try:
+            subject, message = self.encode_event(event)
 
-        logger.info(
-            "Публикация event event=%s message_id=%s "
-            "trace_id=%s stream=%s subject=%s",
-            type(event).__name__,
-            event.message_id,
-            event.trace_id,
-            self.stream_name,
-            subject,
-        )
+            logger.info(
+                "Публикация event event=%s message_id=%s "
+                "trace_id=%s stream=%s subject=%s",
+                type(event).__name__,
+                event.message_id,
+                event.trace_id,
+                self.stream_name,
+                subject,
+            )
 
-        await self.jetstream.publish(
-            subject=subject,
-            payload=message.model_dump_json().encode("utf-8"),
-            stream=self.stream_name
-        )
+            await self.jetstream.publish(
+                subject=subject,
+                payload=message.model_dump_json().encode("utf-8"),
+                stream=self.stream_name,
+            )
+        except Exception:
+            logger.exception(
+                "Ошибка публикации event=%s message_id=%s stream=%s subject=%s",
+                type(event).__name__,
+                event.message_id,
+                self.stream_name,
+                subject,
+            )
+            raise
 
         logger.info(
             "Event опубликован event=%s message_id=%s subject=%s",
