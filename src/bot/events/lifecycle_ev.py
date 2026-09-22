@@ -6,7 +6,7 @@ from bot.events.event import Event
 class BotStartedEvent(Event):
     pass
     
-# @dataclass
-# class BotRunnedEvent(Event):
-#     prev_status: str
-#     cur_status: str
+@dataclass
+class BotRunnedEvent(Event):
+    previous_status: str
+    current_status: str
