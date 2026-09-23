@@ -2,7 +2,7 @@ import logging
 
 from bot.state.general_state import GeneralState
 
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
+from bot.lifecycle.statuses import LifecycleStatus
 
 
 logger = logging.getLogger(__name__)

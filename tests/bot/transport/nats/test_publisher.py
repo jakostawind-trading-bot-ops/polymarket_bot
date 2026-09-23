@@ -11,7 +11,7 @@ from nats_contracts.bot.control.v1.lifecycle import BotStartedEvMsg
 from bot.events.event import Event
 from bot.events.failed_ev import CommandFailedEvent
 from bot.events.lifecycle_ev import BotStartedEvent
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
+from bot.lifecycle.statuses import LifecycleStatus
 from bot.transport.nats.publisher import NatsPublisher
 from bot.state.general_state import GeneralState
 

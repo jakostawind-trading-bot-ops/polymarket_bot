@@ -1,8 +1,8 @@
 from dishka import provide, Provider, Scope
 
 from bot.bootstrap import BootstrapSettings
-from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
+from bot.lifecycle.lifecycle import Lifecycle
+from bot.lifecycle.statuses import LifecycleStatus
 from bot.state.general_state import GeneralState, generate_bet_id
 
 class LifecycleProvider(Provider):

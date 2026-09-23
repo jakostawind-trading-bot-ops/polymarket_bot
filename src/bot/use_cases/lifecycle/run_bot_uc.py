@@ -1,6 +1,6 @@
 import logging
 
-from bot.lifecycle.bot_lifecycle.lifecycle import Lifecycle
+from bot.lifecycle.lifecycle import Lifecycle
 from bot.ports.event_publisher import EventPublisher
 from bot.state.general_state import GeneralState
 from bot.events.lifecycle_ev import BotRunnedEvent

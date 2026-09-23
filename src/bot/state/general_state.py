@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import secrets
 
-from bot.lifecycle.bot_lifecycle.statuses import LifecycleStatus
+from bot.lifecycle.statuses import LifecycleStatus
 
 def generate_bet_id():
     '''Генерирует рандомный бот ид'''

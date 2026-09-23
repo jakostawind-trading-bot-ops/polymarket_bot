@@ -353,8 +353,8 @@ wheels = [
 
 [[package]]
 name = "nats-contracts"
-version = "0.8.3"
-source = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=5d77a1eed30ab0c13c152db1ff2c15745fb6568a#5d77a1eed30ab0c13c152db1ff2c15745fb6568a" }
+version = "0.9.0"
+source = { git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=069b4081905888314df69ca746417d73ff17001e#069b4081905888314df69ca746417d73ff17001e" }
 dependencies = [
     { name = "pydantic" },
 ]
@@ -420,7 +420,7 @@ requires-dist = [
     { name = "aiohttp", specifier = ">=3.14.3" },
     { name = "dishka", specifier = ">=1.10.1" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "nats-contracts", git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=5d77a1eed30ab0c13c152db1ff2c15745fb6568a" },
+    { name = "nats-contracts", git = "https://github.com/jakostawind-trading-bot-ops/nats_contracts.git?rev=069b4081905888314df69ca746417d73ff17001e" },
     { name = "nats-py", specifier = ">=2.15.0" },
     { name = "polymarket-sdk", git = "https://github.com/jakostawind-trading-bot-ops/polymarket_sdk?rev=396667daf22ecb90586a51937c4d933286cdbfbf" },
     { name = "pydantic", specifier = ">=2.13.5" },

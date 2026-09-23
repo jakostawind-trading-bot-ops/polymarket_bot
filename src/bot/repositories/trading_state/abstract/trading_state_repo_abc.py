@@ -11,6 +11,10 @@ class TradingStateRepoABC(ABC):
         pass
     
     @abstractmethod
+    async def untrack_market(self, market_id: int):
+        pass
+    
+    @abstractmethod
     async def get_market_state_repo(self, market_id: int):
         pass
     

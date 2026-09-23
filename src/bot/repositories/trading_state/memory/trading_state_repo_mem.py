@@ -24,6 +24,10 @@ class TradingStateRepoMem(TradingStateRepoABC):
         
         self.trading_state.tracking_markets[market_id] = market_state
         self.market_state_repos[market_id] = market_state_repo
+    
+    async def untrack_market(self, market_id: str):
+        self.trading_state.tracking_markets.pop(market_id, None)
+        self.market_state_repos.pop(market_id, None)
         
     async def get_market_state_repo(self, market_id: int):
         return self.market_state_repos[market_id]
