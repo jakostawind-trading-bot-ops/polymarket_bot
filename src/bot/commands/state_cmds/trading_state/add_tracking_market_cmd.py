@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 
 from bot.commands.command import Command, CommandHandler
@@ -8,7 +7,7 @@ from bot.use_cases.state.trading_state.add_tracking_market_uc import AddTracking
 class AddTrackingMarketCommand(Command):
     market_id: int
     
-class AddTrackingMarketHandle(CommandHandler):
+class AddTrackingMarketHandler(CommandHandler):
     def __init__(self, add_tracking_market_uc: AddTrackingMarketUC):
         self.add_tracking_market_uc = add_tracking_market_uc
     

@@ -1,10 +1,18 @@
-from bot.events.failed_ev import CommandFailedEvent
-from bot.events.lifecycle_ev import BotStartedEvent, BotRunnedEvent
-from bot.events.trading_state_ev import TrackingMarketAddedEvent
+from bot.events import (
+    CommandFailedEvent,
+    BotStartedEvent,
+    BotRunnedEvent,
+    TrackingMarketAddedEvent,
+    TrackingMarketRemovedEvent
+)
 
-from nats_contracts.bot.control.v1.failed.command_failed_ev import CommandFailedEvMsg
-from nats_contracts.bot.control.v1.lifecycle import BotStartedEvMsg, BotRunnedEvMsg
-from nats_contracts.bot.control.v1.trading_state import TrackingMarketAddedEvMsg
+from nats_contracts.bot.control.v1 import (
+    CommandFailedEvMsg,
+    BotStartedEvMsg,
+    BotRunnedEvMsg,
+    TrackingMarketAddedEvMsg,
+    TrackingMarketRemovedEvMsg
+)
 
 EVENT_CONTRACTS = {
     # failed
@@ -15,5 +23,6 @@ EVENT_CONTRACTS = {
     BotRunnedEvent: BotRunnedEvMsg,
     
     # trading state
-    TrackingMarketAddedEvent: TrackingMarketAddedEvMsg
+    TrackingMarketAddedEvent: TrackingMarketAddedEvMsg,
+    TrackingMarketRemovedEvent: TrackingMarketRemovedEvMsg
 }

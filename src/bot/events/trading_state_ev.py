@@ -6,3 +6,7 @@ from bot.entities.market_info import MarketInfo
 @dataclass
 class TrackingMarketAddedEvent(Event):
     market_info: MarketInfo
+    
+@dataclass
+class TrackingMarketRemovedEvent(Event):
+    market_id: int

@@ -4,9 +4,11 @@ from bot.commands.dispatcher import CommandDispatcher
 from bot.transport.nats.decoder import CommandDecoder
 from bot.transport.nats.command_routes.registry import COMMAND_ROUTES
 
-from bot.commands.lifecycle_cmds.run_bot_cmd import RunBotCommand, RunBotHandler
-from bot.commands.state_cmds.account_state.add_account_state_cmd import AddAccountStateCommand, AddAccountStateHandler
-from bot.commands.state_cmds.trading_state.add_tracking_market_cmd import AddTrackingMarketCommand, AddTrackingMarketHandle
+from bot.commands import (
+    RunBotCommand, RunBotHandler,
+    AddTrackingMarketCommand, AddTrackingMarketHandler,
+    RemoveTrackingMarketCommand, RemoveTrackingMarketHandler
+)
 
 
 class CommandProvider(Provider):
@@ -16,10 +18,11 @@ class CommandProvider(Provider):
     run_bot_handler = provide(RunBotHandler)
     
     # acccont state
-    add_account_state_handler = provide(AddAccountStateHandler)
+    # add_account_state_handler = provide(AddAccountStateHandler)
     
     # trading_state
-    add_tracking_market_handler = provide(AddTrackingMarketHandle)
+    add_tracking_market_handler = provide(AddTrackingMarketHandler)
+    remove_tracking_market_handler = provide(RemoveTrackingMarketHandler)
 
     @provide
     def provide_decoder(self) -> CommandDecoder:
@@ -34,10 +37,11 @@ class CommandProvider(Provider):
         run_bot_handler: RunBotHandler,
         
         # account state
-        add_account_state_handler: AddAccountStateHandler,
+        # add_account_state_handler: AddAccountStateHandler,
         
         # trading_state
-        add_tracking_market_handler: AddTrackingMarketHandle
+        add_tracking_market_handler: AddTrackingMarketHandler,
+        remove_tracking_market_handler: RemoveTrackingMarketHandler
     ) -> CommandDispatcher:
         return CommandDispatcher(
             handlers={
@@ -45,9 +49,10 @@ class CommandProvider(Provider):
                 RunBotCommand: run_bot_handler,
                 
                 # state
-                AddAccountStateCommand: add_account_state_handler,
+                # AddAccountStateCommand: add_account_state_handler,
                 
                 # trading_state
-                AddTrackingMarketCommand: add_tracking_market_handler
+                AddTrackingMarketCommand: add_tracking_market_handler,
+                RemoveTrackingMarketCommand: remove_tracking_market_handler
             },
         )

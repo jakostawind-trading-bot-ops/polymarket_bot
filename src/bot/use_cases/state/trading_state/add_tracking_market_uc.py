@@ -44,11 +44,7 @@ class AddTrackingMarketUC():
             await self.trading_state_repo.track_market(market_info=market_info)
             logger.info("Добавление в trading_stage завершено: market_id=%s", market_id)
 
-            stage = "publish_event"
-            await self.publisher.publish_event(
-                TrackingMarketAddedEvent(market_info=market_info)
-            )
-            logger.info("Опубликован event добавления рынка: market_id=%s", market_id)
+
         except Exception:
             logger.exception(
                 "Не удалось добавить рынок для отслеживания: market_id=%s stage=%s",
@@ -57,4 +53,16 @@ class AddTrackingMarketUC():
             )
             raise
         
-        
+        try:
+            event = TrackingMarketAddedEvent(
+                market_info=market_info
+            )
+            
+            await self.publisher.publish_event(event)
+            logger.info("Опубликован event добавления рынка: market_id=%s", market_id)
+        except Exception:
+            logger.exception(
+                "Маркет добавлен, но не удалось опубликовать событие",
+                market_id,
+            )
+            raise

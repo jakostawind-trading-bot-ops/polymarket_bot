@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pydantic import ValidationError
 
-from nats_contracts.control.bot.v1.common import ControlMessage
+from nats_contracts.control.bot.v1 import ControlMessage
 
 from bot.commands.command import Command
 

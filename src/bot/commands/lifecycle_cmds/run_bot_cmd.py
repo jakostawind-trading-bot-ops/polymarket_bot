@@ -1,11 +1,7 @@
-import logging
 from dataclasses import dataclass
 
 from bot.commands.command import Command, CommandHandler
 from bot.use_cases import RunBotUc
-
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
